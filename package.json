@@ -1,0 +1,27 @@
+{
+  "name": "apostrophe-nuanced-permissions",
+  "version": "2.0.0",
+  "description": "Create specialized permissions for users of your site, such as an \"seo\" permission that allows editing only certain fields of certain pieces and pages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apostrophecms/apostrophe-nuanced-permissions.git"
+  },
+  "keywords": [
+    "apostrophecms",
+    "apostrophe",
+    "cms",
+    "content",
+    "management",
+    "system"
+  ],
+  "author": "P'unk Avenue LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/apostrophecms/apostrophe-nuanced-permissions/issues"
+  },
+  "homepage": "https://github.com/apostrophecms/apostrophe-nuanced-permissions#readme"
+}
