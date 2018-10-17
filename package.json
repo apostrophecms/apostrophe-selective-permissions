@@ -1,6 +1,6 @@
 {
   "name": "apostrophe-nuanced-permissions",
-  "version": "2.0.0",
+  "version": "2.0.0-alpha-0",
   "description": "Create specialized permissions for users of your site, such as an \"seo\" permission that allows editing only certain fields of certain pieces and pages",
   "main": "index.js",
   "scripts": {

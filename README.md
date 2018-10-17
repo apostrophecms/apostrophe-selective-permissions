@@ -1,4 +1,8 @@
- Create specialized permissions for users of your site, such as an "seo" permission that allows editing only certain fields of certain pieces and pages.
+ Create specialized permissions for users of your site, such as an "seo" permission that allows updating only certain fields of certain pieces and pages.
+
+## Stability (pre-alpha)
+
+**This doesn't work yet.** A work in progress. Pardon our dust.
 
 ## Installation
 
@@ -23,11 +27,10 @@ modules: {
     extend: 'apostrophe-pieces',
     nuancedPermissions: {
       seo: {
-          edit: {
+          update: {
             fields: [ 'title', 'seoTitle' ],
             seeOtherFields: true
           },
-          manage: true,
           // insert: false,
           // trash: false,
           submit: true
@@ -43,16 +46,16 @@ In the `permissions` array of `apostrophe-nuanced-permissions`, we start by list
 
 Then, in the `nuancedPermissions` option of `articles` (which extends `apostrophe-pieces`), we define what the `seo` permission lets us do with articles: 
 
-* We can manage them (open up the "Manage Articles" dialog and see the list).
-* We can edit them, but only the `title` and `seoTitle` fields.
-* Other fields can be seen in the editor (`seeOtherFields: true`), but are read-only.
+* We can manage them (open up the "Manage Articles" dialog and see the list). If you configure the permission at all for a doc type, then this is implicitly allowed for it. 
+* `update: { ... }`: we can edit existing articles, but only the `title` and `seoTitle` fields.
+* `seeOtherFields: true`: other fields can be seen in the editor, but are read-only. Otherwise they cannot be seen at all.
 * We can't insert (create) articles. `insert: false` is the default.
-* We can't trash (or rescue) articles.
-* We can `submit` articles. This is relevant only if `apostrophe-workflow` is also enabled.
+* We can't trash (or rescue) articles. `trash: false` is the default.
+* We can `submit` articles. This is relevant only if `apostrophe-workflow` is also enabled. Recommended when using workflow.
 
 ## Allowing the SEO team to edit *all* pieces
 
-This is great if we only want to let our SEO consultants edit articles. But what if we want to let them edit all pieces? No problem:
+This is great if we only want to let our SEO consultants edit articles. But what if we want to let them edit all existing pieces? No problem:
 
 ```javascript
   `apostrophe-nuanced-permissions`: { ... same as above ... },
@@ -60,7 +63,7 @@ This is great if we only want to let our SEO consultants edit articles. But what
     extend: 'apostrophe-pieces',
     nuancedPermissions: {
       seo: {
-        edit: {
+        update: {
           fields: [ 'title', 'seoTitle' ],
           seeOtherFields: true
         },
