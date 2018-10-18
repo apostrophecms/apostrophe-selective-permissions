@@ -44,27 +44,30 @@ modules: {
 
 In the `permissions` array of `apostrophe-nuanced-permissions`, we start by listing some permissions we'd like to be able to assign when we edit Apostrophe's user groups. We give each a name and a label.
 
-Then, in the `nuancedPermissions` option of `articles` (which extends `apostrophe-pieces`), we define what the `seo` permission lets us do with articles: 
+Then, in the `nuancedPermissions` option of `articles` (which extends `apostrophe-pieces`), we define what the `seo` permission lets us do with articles:
 
 * We can manage them (open up the "Manage Articles" dialog and see the list). If you configure the permission at all for a doc type, then this is implicitly allowed for it. 
-* `update: { ... }`: we can edit existing articles, but only the `title` and `seoTitle` fields.
-* `seeOtherFields: true`: other fields can be seen in the editor, but are read-only. Otherwise they cannot be seen at all.
+* `update: { ... }`: we can edit existing articles, but only the `title` and `tags` fields.
+* `seeOtherFields: true`: other fields can be seen in the editor, but are read-only. By default, they cannot be seen at all.
 * We can't insert (create) articles. `insert: false` is the default.
 * We can't trash (or rescue) articles. `trash: false` is the default.
 * We can `submit` articles. This is relevant only if `apostrophe-workflow` is also enabled. Recommended when using workflow.
 
 ## Allowing the SEO team to edit *all* pieces
 
-This is great if we only want to let our SEO consultants edit articles. But what if we want to let them edit all existing pieces? No problem:
+This is great if we only want to let our SEO consultants edit articles. But what if we want to let them edit all existing pieces? No problem! We just need to configure `apostrophe-pieces` in `lib/modules/apostrophe-pieces/index.js`.
+
+> Note that this must happen in `lib/modules/apostrophe-pieces/index.js` and NOT in app.js, so that Apostrophe does not try to actually add `apostrophe-pieces` itself as a module. We just want to influence the behavior of modules that extend it.
 
 ```javascript
-  `apostrophe-nuanced-permissions`: { ... same as above ... },
-  'apostrophe-pieces': {
-    extend: 'apostrophe-pieces',
-    nuancedPermissions: {
+// in lib/modules/apostrophe-pieces/index.js
+const _ = require('lodash');
+module.exports = {
+  beforeConstruct: function(self, options) {
+    options.nuancedPermissions = _.merge({
       seo: {
         update: {
-          fields: [ 'title', 'seoTitle' ],
+          fields: [ 'title', 'tags' ],
           seeOtherFields: true
         },
         manage: true,
@@ -72,9 +75,12 @@ This is great if we only want to let our SEO consultants edit articles. But what
         // trash: false,
         submit: true
       }
-    }
+    }, options.nuancedPermissions || {});
   }
+}
 ```
+
+We use `beforeConstruct` and `_.merge` to incorporate any further configuration of `nuancedPermissions` for individual pieces modules.
 
 These settings will be inherited by other pieces modules. We can adjust what is inherited by configuring those modules too.
 

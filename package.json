@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/apostrophecms/apostrophe-nuanced-permissions/issues"
   },
-  "homepage": "https://github.com/apostrophecms/apostrophe-nuanced-permissions#readme"
+  "homepage": "https://github.com/apostrophecms/apostrophe-nuanced-permissions#readme",
+  "dependencies": {
+    "lodash": "^4.17.11"
+  }
 }
