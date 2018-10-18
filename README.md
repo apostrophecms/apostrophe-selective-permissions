@@ -1,8 +1,6 @@
  Create specialized permissions for users of your site, such as an "seo" permission that allows updating only certain fields of certain pieces and pages.
 
-## Stability (pre-alpha)
-
-**This doesn't work yet.** A work in progress. Pardon our dust.
+## Stability: alpha
 
 ## Installation
 
@@ -31,8 +29,6 @@ modules: {
             fields: [ 'title', 'seoTitle' ],
             seeOtherFields: true
           },
-          // insert: false,
-          // trash: false,
           submit: true
       }
     }
@@ -49,9 +45,9 @@ Then, in the `nuancedPermissions` option of `articles` (which extends `apostroph
 * We can manage them (open up the "Manage Articles" dialog and see the list). If you configure the permission at all for a doc type, then this is implicitly allowed for it. 
 * `update: { ... }`: we can edit existing articles, but only the `title` and `tags` fields.
 * `seeOtherFields: true`: other fields can be seen in the editor, but are read-only. By default, they cannot be seen at all.
-* We can't insert (create) articles. `insert: false` is the default.
-* We can't trash (or rescue) articles. `trash: false` is the default.
 * We can `submit` articles. This is relevant only if `apostrophe-workflow` is also enabled. Recommended when using workflow.
+
+These are currently the only forms of limited access that can be given out via this module. Further expansion is anticipated.
 
 ## Allowing the SEO team to edit *all* pieces
 
@@ -70,9 +66,6 @@ module.exports = {
           fields: [ 'title', 'tags' ],
           seeOtherFields: true
         },
-        manage: true,
-        // insert: false,
-        // trash: false,
         submit: true
       }
     }, options.nuancedPermissions || {});
@@ -97,9 +90,6 @@ These settings will be inherited by other pieces modules. We can adjust what is 
             fields: [ 'title', 'seoTitle' ],
             seeOtherFields: true
           },
-          manage: true,
-          move: true,
-          // insert: false,
           submit: true
       }
     },
@@ -107,11 +97,7 @@ These settings will be inherited by other pieces modules. We can adjust what is 
   }
 ```
 
-Permissions for pages are managed via the `apostrophe-custom-pages` module.
-
-Here `manage` refers to being able to see the "Reorganize" view (aka "Pages"). 
-
-The `move` action refers to moving a page in the page tree. It implies they can `trash` the page, too.
+Note that permissions for all types of pages are managed via configuration of the `apostrophe-custom-pages` module.
 
 ## More than one permission
 
@@ -156,17 +142,24 @@ modules: {
 }
 ```
 
-## IMPORTANT: reserved verbs and naming restrictions
+## IMPORTANT: reserved permission names and permission naming restrictions
 
-Do **not** use the following names for your nuanced permissions:
+**Do not** use the following names for your nuanced permissions:
 
 `edit`, `publish`, `admin`, `guest`
 
 Choose new verbs of your own.
 
-Do **not** use hyphens in your permission names. However, youMayUseCamelCase.
+**Do not** use hyphens in your permission names. However, youMayUseCamelCase.
+
+## Who should NOT be given nuanced permissions?
+
+Nuanced permissions should only be given out to **groups that cannot already edit the document types in question.** They should *not* be checked off for administrators, or even for groups that can fully edit some or all pieces of a particular type. **Due to technical limitations, if a user is given a nuanced permission like `seo`, Apostrophe  assumes that is the only type of edit they can make** to the relevant type of document.
+
+You *may* give two *different* nuanced permissions to the same group, as long as they apply to different document types.
 
 ## "What's all this about user groups?"
 
 If you don't see "Groups" on your admin bar, you probably still have a `groups` option configured for the `apostrophe-users` module, either in `app.js` or in `lib/modules/apostrophe-users/index.js`. If you are using this module, you probably want to remove that `groups` option. Now you can create as many groups as you wish and assign them permissions dynamically.
+
 
