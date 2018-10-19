@@ -180,7 +180,6 @@ describe('test apostrophe-nuanced-permissions', function() {
       },
       json: true
     });
-    console.log(response);
     assert(response.status === 'forbidden');
   });
 
