@@ -5,10 +5,10 @@ module.exports = {
   moogBundle: {
 
     modules: [ 
-      'apostrophe-nuanced-permissions-doc-type-manager', 
-      'apostrophe-nuanced-permissions-permissions',
-      'apostrophe-nuanced-permissions-admin-bar',
-      'apostrophe-nuanced-permissions-pages'
+      'apostrophe-selective-permissions-doc-type-manager', 
+      'apostrophe-selective-permissions-permissions',
+      'apostrophe-selective-permissions-admin-bar',
+      'apostrophe-selective-permissions-pages'
     ],
 
     directory: 'lib/modules'
@@ -26,13 +26,13 @@ module.exports = {
       if (!req.data.page) {
         return false;
       }
-      if (req.data.page && self.hasNuancedPagePermissions(req)) {
+      if (req.data.page && self.hasselectivePagePermissions(req)) {
         contextMenu.push({
           action: 'update-page',
           label: 'Page Settings'
         });
       }
-      if (req.data.piece && self.hasNuancedPiecePermissions(req)) {
+      if (req.data.piece && self.hasselectivePiecePermissions(req)) {
         const manager = self.apos.docs.getManager(req.data.piece.type);
         contextMenu.push({
           action: 'edit-' + self.apos.utils.cssName(manager.name),
@@ -46,25 +46,25 @@ module.exports = {
       return false;
     };
 
-    self.hasNuancedPagePermissions = function(req) {
+    self.hasselectivePagePermissions = function(req) {
       if (!req.user) {
         return false;
       }
       const manager = self.apos.docs.getManager(req.data.page.type);
-      const nuancedPermissions = manager.options.nuancedPermissions;
-      const found = _.find(_.keys(nuancedPermissions), function(name) {
+      const selectivePermissions = manager.options.selectivePermissions;
+      const found = _.find(_.keys(selectivePermissions), function(name) {
         return req.user._permissions[name];
       });
       return !!found;
     };
 
-    self.hasNuancedPiecePermissions = function(req) {
+    self.hasselectivePiecePermissions = function(req) {
       if (!req.user) {
         return false;
       }
       const manager = self.apos.docs.getManager(req.data.piece.type);
-      const nuancedPermissions = manager.options.nuancedPermissions;
-      const found = _.find(_.keys(nuancedPermissions), function(name) {
+      const selectivePermissions = manager.options.selectivePermissions;
+      const found = _.find(_.keys(selectivePermissions), function(name) {
         return req.user._permissions[name];
       });
       return !!found;
@@ -73,13 +73,13 @@ module.exports = {
     self.on('apostrophe:modulesReady', 'buildByModule', function() {
       _.each(self.apos.modules, function(module, name) {
         if (self.apos.instanceOf(module, 'apostrophe-pieces')) {
-          if (module.options.nuancedPermissions) {
-            self.byModule[module.__meta.name] = module.options.nuancedPermissions;
+          if (module.options.selectivePermissions) {
+            self.byModule[module.__meta.name] = module.options.selectivePermissions;
           }
         }
         if (self.apos.instanceOf(module, 'apostrophe-custom-pages')) {
-          if (module.options.nuancedPermissions) {
-            self.byModule['apostrophe-pages'] = module.options.nuancedPermissions;
+          if (module.options.selectivePermissions) {
+            self.byModule['apostrophe-pages'] = module.options.selectivePermissions;
           }
         }
       });

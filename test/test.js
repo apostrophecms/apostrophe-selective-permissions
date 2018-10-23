@@ -2,7 +2,7 @@ const assert = require('assert');
 const request = require('request-promise');
 const _ = require('lodash');
 
-describe('test apostrophe-nuanced-permissions', function() {
+describe('test apostrophe-selective-permissions', function() {
 
   let apos;
 
@@ -15,7 +15,7 @@ describe('test apostrophe-nuanced-permissions', function() {
   it('initializes', function(done) {
     apos = require('apostrophe')({
       testModule: true,
-      shortName: 'apostrophe-nuanced-permissions-test',      
+      shortName: 'apostrophe-selective-permissions-test',      
       modules: {
         'skeleton': {
           construct: function(self, options) {
@@ -57,7 +57,7 @@ describe('test apostrophe-nuanced-permissions', function() {
           port: 7900,
           csrf: false
         },
-        'apostrophe-nuanced-permissions': {
+        'apostrophe-selective-permissions': {
           permissions: [
             {
               name: 'seo',
@@ -84,7 +84,7 @@ describe('test apostrophe-nuanced-permissions', function() {
               ]
             }
           ],
-          nuancedPermissions: {
+          selectivePermissions: {
             seo: {
               update: {
                 fields: [ 'title', 'tags' ]
@@ -95,7 +95,7 @@ describe('test apostrophe-nuanced-permissions', function() {
       },
       afterInit: function(callback) {
         assert(apos.modules['products']);
-        assert(apos.modules['products'].options.nuancedPermissions);
+        assert(apos.modules['products'].options.selectivePermissions);
         return callback(null);
       },
       afterListen: function(err) {

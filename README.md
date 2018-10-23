@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-npm install apostrophe-nuanced-permissions
+npm install apostrophe-selective-permissions
 ```
 
 ## Configuration
@@ -11,7 +11,7 @@ npm install apostrophe-nuanced-permissions
 ```javascript
 // in app.js
 modules: {
-  `apostrophe-nuanced-permissions`: {
+  `apostrophe-selective-permissions`: {
     permissions: [
       {
         name: 'seo',
@@ -21,7 +21,7 @@ modules: {
   },
   'articles': {
     extend: 'apostrophe-pieces',
-    nuancedPermissions: {
+    selectivePermissions: {
       seo: {
           update: {
             fields: [ 'title', 'seoTitle' ],
@@ -38,9 +38,9 @@ modules: {
 
 Let's say we want to give a team of SEO consultants limited access to update relevant fields of our articles.
 
-So in the `permissions` array of `apostrophe-nuanced-permissions`, we start by listing some permissions we'd like to be able to assign when we edit Apostrophe's user groups. We give each a name and a label. These are distinct from ordinary Apostrophe permissions.
+So in the `permissions` array of `apostrophe-selective-permissions`, we start by listing some permissions we'd like to be able to assign when we edit Apostrophe's user groups. We give each a name and a label. These are distinct from ordinary Apostrophe permissions.
 
-Then, in the `nuancedPermissions` option of `articles` (which extends `apostrophe-pieces`), we define what the `seo` permission lets us do with articles:
+Then, in the `selectivePermissions` option of `articles` (which extends `apostrophe-pieces`), we define what the `seo` permission lets us do with articles:
 
 * `update: { ... }`: we can edit existing articles via the "edit article" dialog box, but only the `title` and `tags` fields. This implies access to the "Manage" dialog box as well.
 * `seeOtherFields: true`: other fields can be seen in the editor, but are read-only. By default, they cannot be seen at all.
@@ -59,7 +59,7 @@ This is great if we only want to let our SEO consultants edit articles. But what
 const _ = require('lodash');
 module.exports = {
   beforeConstruct: function(self, options) {
-    options.nuancedPermissions = _.merge({
+    options.selectivePermissions = _.merge({
       seo: {
         update: {
           fields: [ 'title', 'tags' ],
@@ -67,12 +67,12 @@ module.exports = {
         },
         submit: true
       }
-    }, options.nuancedPermissions || {});
+    }, options.selectivePermissions || {});
   }
 }
 ```
 
-We use `beforeConstruct` and `_.merge` to incorporate any further configuration of `nuancedPermissions` for individual pieces modules.
+We use `beforeConstruct` and `_.merge` to incorporate any further configuration of `selectivePermissions` for individual pieces modules.
 
 These settings will be inherited by other pieces modules. We can adjust what is inherited by configuring those modules too.
 
@@ -81,9 +81,9 @@ These settings will be inherited by other pieces modules. We can adjust what is 
 ## Allowing the SEO team to edit page settings
 
 ```javascript
-  `apostrophe-nuanced-permissions`: { ... same as above ... },
+  `apostrophe-selective-permissions`: { ... same as above ... },
   'apostrophe-custom-pages': {
-    nuancedPermissions: {
+    selectivePermissions: {
       seo: {
           edit: {
             fields: [ 'title', 'seoTitle' ],
@@ -100,12 +100,12 @@ Note that permissions for all types of pages are managed via configuration of th
 
 ## More than one permission
 
-You can configure more than one nuanced permission in the array, and you can configure what each permission can do:
+You can configure more than one selective permission in the array, and you can configure what each permission can do:
 
 ```javascript
 // in app.js
 modules: {
-  `apostrophe-nuanced-permissions`: {
+  `apostrophe-selective-permissions`: {
     permissions: [
       {
         name: 'seo',
@@ -120,7 +120,7 @@ modules: {
   },
   'articles': {
     extend: 'apostrophe-pieces',
-    nuancedPermissions: {
+    selectivePermissions: {
       seo: {
         edit: {
           fields: [ 'title', 'seoTitle' ],
@@ -143,7 +143,7 @@ modules: {
 
 ## IMPORTANT: reserved permission names and permission naming restrictions
 
-**Do not** use the following names for your nuanced permissions:
+**Do not** use the following names for your selective permissions:
 
 `edit`, `publish`, `admin`, `guest`
 
@@ -151,12 +151,12 @@ Choose new verbs of your own. Feel free to use a unique prefix to avoid future c
 
 **Do not** use hyphens in your permission names. However, youMayUseCamelCase.
 
-## Who should NOT be given nuanced permissions?
+## Who should NOT be given selective permissions?
 
-Nuanced permissions should only be given out to **groups that cannot already edit the document types in question.** They should *not* be checked off for administrators, or even for groups that can fully edit some or all pieces of a particular type. **Due to technical limitations, if a user is given a nuanced permission like `seo`, Apostrophe  assumes that is the only type of edit they can make** to the relevant type of document.
+selective permissions should only be given out to **groups that cannot already edit the document types in question.** They should *not* be checked off for administrators, or even for groups that can fully edit some or all pieces of a particular type. **Due to technical limitations, if a user is given a selective permission like `seo`, Apostrophe  assumes that is the only type of edit they can make** to the relevant type of document.
 
-You *may* give two *different* nuanced permissions to the same group, as long as they apply to different document types.
+You *may* give two *different* selective permissions to the same group, as long as they apply to different document types.
 
 ## "What's all this about user groups?"
 
-If you don't see "Groups" on your admin bar, you probably still have a `groups` option configured for the `apostrophe-users` module, either in `app.js` or in `lib/modules/apostrophe-users/index.js`. If you are using this module, you probably want to remove that `groups` option. Now you can create as many groups as you wish and assign them permissions dynamically via the admin bar. You can, however, certainly add nuanced permission names to the `groups` option if you wish.
+If you don't see "Groups" on your admin bar, you probably still have a `groups` option configured for the `apostrophe-users` module, either in `app.js` or in `lib/modules/apostrophe-users/index.js`. If you are using this module, you probably want to remove that `groups` option. Now you can create as many groups as you wish and assign them permissions dynamically via the admin bar. You can, however, certainly add selective permission names to the `groups` option if you wish.
